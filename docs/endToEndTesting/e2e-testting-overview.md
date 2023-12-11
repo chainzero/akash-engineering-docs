@@ -12,10 +12,6 @@ In this section we review the implementation of Akash end to end testing - both 
 
 * [Current SDLs Used in E2E Test Invokes](https://github.com/akash-network/provider/tree/main/testdata)
 
-#### Akash Node Definitions
-
-* Coming soon
-
 ## Exploration of Testing Strategies - Akash Provider
 
 ### Go Test Suite
