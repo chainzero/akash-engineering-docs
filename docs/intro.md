@@ -7,13 +7,13 @@ slug: /
 
 Akash Engineering documentation is broken out into the following primary categories.
 
+# Akash Contributor Guidance and Standards
+
+* [Akash Code Contributors - Policies and Standards](./akashContributors/contributors-overview.md)
+
 # Akash Development Environment Setup
 
 * [Create Local Development Environment](akash-dev-env.md)
-
-# Akash Custom Client Creation
-
-* [Custom Query and Transaction Examples](./client/client-repo-overview.md)
 
 # Akash Provider Repo
 

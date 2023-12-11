@@ -3,7 +3,7 @@ version: "2.0"
 
 services:
   web:
-    image: scarruthers/engineering-docs:20
+    image: scarruthers/engineering-docs:24
     expose:
       - port: 80
         accept:

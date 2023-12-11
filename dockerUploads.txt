@@ -1,9 +1,17 @@
 ######AWS Remote copy
 
-scp -i /Users/scarruthers/Documents/AWS/keypair/akashAWS/AkashKey.pem -r /Users/scarruthers/Documents/docusaurus/engineering-docs ubuntu@ec2-3-12-150-150.us-east-2.compute.amazonaws.com:/home/ubuntu/applications/engineeringdocs
+scp -i /Users/scarruthers/Documents/AWS/keypair/akashAWS/AkashKey.pem -r /Users/scarruthers/Documents/docusaurus/engineering-docs ubuntu@ec2-3-144-6-216.us-east-2.compute.amazonaws.com:/home/ubuntu/applications/engineeringdocs
 
 
-sudo docker image build -t scarruthers/engineering-docs:20 .
+sudo docker image build -t scarruthers/engineering-docs:22 .
 
 
-sudo docker image push scarruthers/engineering-docs:20
+sudo docker image push scarruthers/engineering-docs:22
+
+
+######Local image builds and uploads
+
+docker buildx build --platform linux/amd64 -t scarruthers/engineering-docs:24 .
+
+
+docker image push scarruthers/engineering-docs:24
