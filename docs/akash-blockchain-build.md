@@ -6,11 +6,11 @@ Follow the steps in this guide to scaffold and build an Akash blockchain for tes
 
 Sections:
 
-* Environment Overview
-* Akash Blockchain Build
-* RPC Node Build
-* Akash Provider Build
-* CosmoVisor Network Upgrade Test
+* [Environment Overview](akash-blockchain-build.md#environment-overview)
+* [Akash Blockchain Build](akash-blockchain-build.md#akash-blockchain-build)
+* [RPC Node Build](akash-blockchain-build.md#rpc-node-build)
+* [Akash Provider Build](akash-blockchain-build.md#akash-provider-build)
+* [CosmoVisor Network Upgrade Test](akash-blockchain-build.md#cosmovisor-network-upgrade-test)
 
 ### Environment Overview
 
@@ -390,7 +390,7 @@ mv ~/.akash/config/genesis.json.new ~/.akash/config/genesis.json
 
 **Preserve/Serve `genesis.json` File**
 
-* We should store the `geensis.json` file in a place we can retrieve it from later and also to serve the file as a source for other Validator/RPC Nodes coming onto the network in the future
+* We should store the `genesis.json` file in a place we can retrieve it from later and also to serve the file as a source for other Validator/RPC Nodes coming onto the network in the future
 * We could use a services like `transfer.sh` to upload the file to and which will provide a URL for later access. Or we could store in a GitHub repo or Gist. For simplicity in this example we use a GH Gist post and that example can be found [here](https://gist.githubusercontent.com/chainzero/b4d767686a787bdd9bb0ea7510af17f3/raw/7e523d81d81de5d323baeed12907cea6bbb2b8bd/genesis.json).
 
 #### STEP 5 - Initialize the Blockchain
@@ -646,6 +646,77 @@ _**EXAMPLE/EXPECTED OUTPUT**_
 
 ```
 {"NodeInfo":{"protocol_version":{"p2p":"8","block":"11","app":"0"},"id":"7cacf5b9b4609955651832dc956462748e6d5683","listen_addr":"tcp://0.0.0.0:26656","network":"sandbox-01","version":"0.34.27","channels":"40202122233038606100","moniker":"rpc-01","other":{"tx_index":"on","rpc_address":"tcp://0.0.0.0:26657"}},"SyncInfo":{"latest_block_hash":"354FE2E80583C4C5035473557C1268C5CEB4EA020A04ED2F23B1C8A64840538F","latest_app_hash":"C8D05A64741A9F80003482397A62C47BA8AF71198AB46901EFD4FBB2666A9A84","latest_block_height":"4055","latest_block_time":"2024-03-23T01:45:43.804861718Z","earliest_block_hash":"667680E786A4F4D371202BA1D184433405161F9A2775283BA79AB8937EF08F53","earliest_app_hash":"E3B0C44298FC1C149AFBF4C8996FB92427AE41E4649B934CA495991B7852B855","earliest_block_height":"1","earliest_block_time":"2024-03-22T18:25:20.428854275Z","catching_up":false},"ValidatorInfo":{"Address":"19764CA8E5E85F2186DAF1CF64923D99D9AFCB17","PubKey":{"type":"tendermint/PubKeyEd25519","value":"hv05xEVMkG5zYA7m6MiiGVLncTUn3FssG1HO1NnSIts="},"VotingPower":"0"}}
+```
+
+### Akash Provider Build
+
+* Build the Akash Provider via Helm Charts and via this [documentation](https://akash.network/docs/providers/build-a-cloud-provider/akash-cloud-provider-build-with-helm-charts/)
+* Conduct build from control-plane node of pre-existing Kubernetes cluster
+* Review additional notes section below for guidance on setting up a provider for test blockchain use
+
+#### Additional Notes Provider Build
+
+_**Provider Account Creation and Configuration**_
+
+* Install `provider-services` binary and create/import provider Akash address
+* Configure environment variables as follows replacing the account address with your provider address
+
+```
+AKASH_KEY_NAME=default
+
+AKASH_KEYRING_BACKEND=test
+
+export AKASH_CHAIN_ID="sandbox-01"
+
+export AKASH_ACCOUNT_ADDRESS=akash1mtnuc449l0mckz4cevs835qg72nvqwlul5wzyf
+ 
+export AKASH_NODE=http://rpc:26657
+
+export AKASH_GAS=auto
+export AKASH_GAS_ADJUSTMENT=1.5
+export AKASH_GAS_PRICES=0.025uakt
+export AKASH_SIGN_MODE=amino-json
+```
+
+_**Fund Provider Account**_&#x20;
+
+* Import the validator account to send funds to the provider account
+* Enter the mnemonic for the account when prompted
+* Example:
+
+```
+provider-services keys add validator --recover
+```
+
+* Transfer funds from the valiadtor account to the provider account
+* Example:
+
+```
+provider-services tx send <valdiator-address> <provider-address> 100000000uakt
+```
+
+_**Chain ID Specification**_
+
+* Ensure the chain ID is specified as `sandbox-01` in the `provider.yaml` file such as (replace address and other elements as necessary):
+
+```
+---
+from: "$ACCOUNT_ADDRESS"
+key: "$(cat ~/key.pem | openssl base64 -A)"
+keysecret: "$(echo $KEY_PASSWORD | openssl base64 -A)"
+domain: "$DOMAIN"
+node: "$NODE"
+withdrawalperiod: 12h
+chainid: sandbox-01
+attributes:
+  - key: region
+    value: "us-central"
+  - key: host
+    value: akash
+  - key: tier
+    value: community
+  - key: organization
+    value: "akashtesting"
 ```
 
 ### CosmoVisor Network Upgrade Test
