@@ -6,19 +6,19 @@ sidebar_position: 2
 
 Follow these sequential steps to build a local Akash development environment.
 
-* [Overview and Requirements](#overview-section)
-* [Code](#code-section)
-* [Install Tools](#install-tools-section)
-* [Development Environment General Behavior](#general-behavior-section)
-* [Runbook](#runbook-section)
-* [Parameters](#parameters-section)
-* [Use Runbook](#runbook-section)
+* [Overview and Requirements](akash-dev-env.md#overview-section)
+* [Code](akash-dev-env.md#code-section)
+* [Install Tools](akash-dev-env.md#install-tools-section)
+* [Development Environment General Behavior](akash-dev-env.md#general-behavior-section)
+* [Runbook](akash-dev-env.md#runbook-section)
+* [Parameters](akash-dev-env.md#parameters-section)
+* [Use Runbook](akash-dev-env.md#runbook-section)
 
-## <a id="overview-section"></a>Overview and Requirements
+## Overview and Requirements <a href="#overview-section" id="overview-section"></a>
 
 ### Overview
 
-This page covers setting up development environment for both [node](https://github.com/akash-network/node) and [provider](https://github.com/akash-network/provider) repositories. The provider repo elected as placeholder for all the scripts as it depends on the `node` repo.   Should you already know what this guide is all about - feel free to explore examples.
+This page covers setting up development environment for both [node](https://github.com/akash-network/node) and [provider](https://github.com/akash-network/provider) repositories. The provider repo elected as placeholder for all the scripts as it depends on the `node` repo. Should you already know what this guide is all about - feel free to explore examples.
 
 ### Requirements
 
@@ -32,11 +32,11 @@ Ensure that Docker Desktop/Engine has been installed on machine that the develop
 
 #### Direnv Use
 
-##### Install Direnv if Necessary
+**Install Direnv if Necessary**
 
-Direnv is used for the install process.  Ensure that you have Direnv install these [instructions](https://direnv.net/).
+Direnv is used for the install process. Ensure that you have Direnv install these [instructions](https://direnv.net/).
 
-##### Configure Environment for Direnv Use
+**Configure Environment for Direnv Use**
 
 * Edit the ZSH shell profile with visual editor.
 
@@ -50,7 +50,7 @@ vi .zshrc
 eval "$(direnv hook zsh)"
 ```
 
-## <a id="code-section"></a>Code
+## Code <a href="#code-section" id="code-section"></a>
 
 In the example use within this guide, repositories will be located in `~/go/src/github.com/akash-network`. Create directory if it does not already exist via:
 
@@ -60,7 +60,7 @@ mkdir -p ~/go/src/github.com/akash-network
 
 ### Clone Akash Node and Provider Repositories
 
-> _**NOTE**_ - all commands in the remainder of this guide  assume a current directory of `~/go/src/github.com/akash-network`unless stated otherwise.
+> _**NOTE**_ - all commands in the remainder of this guide assume a current directory of `~/go/src/github.com/akash-network`unless stated otherwise.
 
 ```shell
 cd ~/go/src/github.com/akash-network 
@@ -68,7 +68,7 @@ git clone https://github.com/akash-network/node.git
 git clone https://github.com/akash-network/provider.git
 ```
 
-## <a id="install-tools-section"></a>Install Tools
+## Install Tools <a href="#install-tools-section" id="install-tools-section"></a>
 
 Run following script to install all system-wide tools. Currently supported host platforms.
 
@@ -81,7 +81,7 @@ cd ~/go/src/github.com/akash-network
 ./provider/script/install_dev_dependencies.sh
 ```
 
-## <a id="general-behavior-section"></a>Development Environment General Behavior
+## Development Environment General Behavior <a href="#general-behavior-section" id="general-behavior-section"></a>
 
 All examples are located within [\_run](https://github.com/akash-network/provider/tree/main/\_run) directory. Commands are implemented as `make` targets.
 
@@ -93,7 +93,7 @@ There are three ways we use to set up the Kubernetes cluster.
 
 Both `kind` and `minikube` are e2e, i.e. the configuration is capable of spinning up cluster and the local host, whereas `ssh` expects cluster to be configured before use.
 
-## <a id="runbook-section"></a>Runbook
+## Runbook <a href="#runbook-section" id="runbook-section"></a>
 
 There are four configuration variants, each presented as directory within[ \_run](https://github.com/akash-network/provider/tree/main/\_run).
 
@@ -114,19 +114,20 @@ make kube-cluster-delete
 make clean
 make init
 ```
-## <a id="parameters-section"></a>Parameters
+
+## Parameters <a href="#parameters-section" id="parameters-section"></a>
 
 Parameters for use within the Runbooks detailed later in this guide.
 
-| Name                | Default value                                                                                     | Effective on target(s)                                                                                                                                            |
-| ------------------- | ------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| SKIP\_BUILD         | false                                                                                             |                                                                                                                                                                   |
-| DSEQ                | 1                                                                                                 | <ul><li>deployment-\* </li><li>lease-\* </li><li>bid-\* </li><li>send-manifest</li></ul>                                                                             |
-| OSEQ                | 1                                                                                                 | <ul><li>deployment-\* </li><li>lease-\* </li><li>bid-\* </li><li>send-manifest</li></ul>                                                                             |
-| GSEQ                | 1                                                                                                 | <ul><li>deployment-\* </li><li>lease-\* </li><li>bid-\* </li><li>send-manifest</li></ul>                                                                             |
-| KUSTOMIZE\_INSTALLS | <p>Depends on runbook.<br/>Refer to each runbook's <code>Makefile</code> to see default value.</p> | <ul><li>kustomize-init</li><li>kustomize-templates</li><li>kustomize-set-images</li><li>kustomize-configure-services </li><li>kustomize-deploy-services</li></ul> |
+| Name                | Default value                                                                                     | Effective on target(s)                                                                                                                                           |
+| ------------------- | ------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| SKIP\_BUILD         | false                                                                                             |                                                                                                                                                                  |
+| DSEQ                | 1                                                                                                 | <ul><li>deployment-*</li><li>lease-*</li><li>bid-*</li><li>send-manifest</li></ul>                                                                               |
+| OSEQ                | 1                                                                                                 | <ul><li>deployment-*</li><li>lease-*</li><li>bid-*</li><li>send-manifest</li></ul>                                                                               |
+| GSEQ                | 1                                                                                                 | <ul><li>deployment-*</li><li>lease-*</li><li>bid-*</li><li>send-manifest</li></ul>                                                                               |
+| KUSTOMIZE\_INSTALLS | <p>Depends on runbook.<br>Refer to each runbook's <code>Makefile</code> to see default value.</p> | <ul><li>kustomize-init</li><li>kustomize-templates</li><li>kustomize-set-images</li><li>kustomize-configure-services</li><li>kustomize-deploy-services</li></ul> |
 
-## <a id="runbook-section"></a>Use Runbook
+## Use Runbook <a href="#runbook-section" id="runbook-section"></a>
 
 ### Runbook Overview
 
@@ -140,7 +141,7 @@ For the purpose of documentation clarity we will refer to these terminal session
 
 #### STEP 1 - Open Runbook
 
-> _**NOTE**_ - run the commands in this step on terminal1, terminal2, and terminal3&#x20;
+> _**NOTE**_ - run the commands in this step on terminal1, terminal2, and terminal3
 
 Run this step on all three terminal sessions to ensure we are in the correct directory for later steps.
 
@@ -158,7 +159,7 @@ cd ~/go/src/github.com/akash-network/provider/_run/kube
 make kube-cluster-setup
 ```
 
-##### Possible Timed Out Waiting for the Condition Error
+**Possible Timed Out Waiting for the Condition Error**
 
 If the following error is encountered when running `make kube-cluster-setup`:
 
@@ -169,7 +170,7 @@ error: timed out waiting for the condition
 make: *** [../common-kube.mk:120: kube-setup-ingress-default] Error 1
 ```
 
-This is an indication that the Kubernetes ingress-controller did not initialize within the default timeout period.  In such cases, re-execute `make kube-cluster-setup` with a custom timeout period such as the example below.  This step is NOT necessary if `make kube-cluster-setup` completed on first run with no errors encountered.
+This is an indication that the Kubernetes ingress-controller did not initialize within the default timeout period. In such cases, re-execute `make kube-cluster-setup` with a custom timeout period such as the example below. This step is NOT necessary if `make kube-cluster-setup` completed on first run with no errors encountered.
 
 ```
 cd provider/_run/<kube|single|ssh>
@@ -195,7 +196,7 @@ make node-run
 make provider-create
 ```
 
-##### Note on Keys
+**Note on Keys**
 
 Each configuration creates four keys: The keys are assigned to the targets and under normal circumstances there is no need to alter it. However, it can be done with setting KEY\_NAME:
 
@@ -219,7 +220,7 @@ make provider-run
 
 > _**NOTE**_ - run the commands in this step on terminal1 only
 
-##### Create the Deployment
+**Create the Deployment**
 
 * Take note of the deplpyment ID (DSEQ) generated for use in subsequent steps
 
@@ -227,13 +228,13 @@ make provider-run
 make deployment-create
 ```
 
-##### Query Deployments
+**Query Deployments**
 
 ```
 make query-deployments
 ```
 
-##### Query Orders
+**Query Orders**
 
 * Steps ensure that an order is created for the deployment after a short period of time
 
@@ -241,7 +242,7 @@ make query-deployments
 make query-orders
 ```
 
-##### Query Bids
+**Query Bids**
 
 * Step ensures the Provider services daemon bids on the test deployment
 
@@ -253,19 +254,19 @@ make query-bids
 
 > _**NOTE**_ - run the commands in this step on terminal1 only
 
-##### Create Lease
+**Create Lease**
 
 ```
 make lease-create
 ```
 
-##### Query Lease
+**Query Lease**
 
 ```
 make query-leases
 ```
 
-##### Ensure Provider Received Lease Create Message
+**Ensure Provider Received Lease Create Message**
 
 * Should see "pending" inventory in the provider status and for the test deployment
 
@@ -277,19 +278,19 @@ make provider-status
 
 > _**NOTE**_ - run the commands in this step on terminal1 only
 
-##### Send the Manifest to the Provider
+**Send the Manifest to the Provider**
 
 ```
 make send-manifest
 ```
 
-##### Check Status of  Deployment
+**Check Status of Deployment**
 
 ```
 make provider-lease-status
 ```
 
-##### Ping the Deplpyment to Ensure Liveness
+**Ping the Deplpyment to Ensure Liveness**
 
 ```
  make provider-lease-ping
@@ -299,15 +300,15 @@ make provider-lease-status
 
 > _**NOTE**_ - run the commands in this step on terminal1 only
 
-##### Query Lease Status
+**Query Lease Status**
 
 ```
 make provider-lease-status
 ```
 
-##### Fetch Pod Logs
+**Fetch Pod Logs**
 
-* Note that this will fetch the logs for all pods in the Kubernetes cluster.  Filter/search for the test deployment's ID (DSEQ) for related activities.
+* Note that this will fetch the logs for all pods in the Kubernetes cluster. Filter/search for the test deployment's ID (DSEQ) for related activities.
 
 ```
 make provider-lease-logs
