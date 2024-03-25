@@ -108,6 +108,7 @@
         * [Inentory Operator Overview](docs/provider/operators/inventory-operator/inventory-operator-overview.md)
       * [ip-operator](docs/provider/operators/ip-operator/README.md)
         * [IP Operator Overview](docs/provider/operators/ip-operator/ip-operator-overview.md)
+  * [Akash Blockchain Build](docs/akash-blockchain-build.md)
 * [src](src/README.md)
   * [pages](src/pages/README.md)
     * [Markdown page example](src/pages/markdown-page.md)
