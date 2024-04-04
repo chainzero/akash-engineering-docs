@@ -62,6 +62,7 @@ vi key.pem
 ### Steps
 
 * Download and install script on worker nodes
+* Script joins the worker node to the K3s cluster and install GPU drivers/toolkits if the associated option is specified
 
 #### TEMPLATE
 
