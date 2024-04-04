@@ -34,6 +34,8 @@ In this document the process of building an Akash Provider via shell scripts is 
 
 ### Steps
 
+> NOTE - while the scripts used have access to the `provider-services` binary - it will be necessary to add `/root/bin` to your path for execution of commands in this section.  Adding the binary's directory to your path is detailed in the CLI install docs [here](https://akash.network/docs/deployments/akash-cli/installation/#install-akash-cli).
+
 * Conduct these steps on the master node
 * Suggested commands to complete necessary actions:
 
@@ -83,7 +85,8 @@ vi key.pem
 
 ### Steps
 
-* Download and install script on worker nodes
+* Download and install script on the master node
+* Script installs Helm, installs alll necessary Akash Provider labels/namespaces/CRDs, install all necessary Akash operators (inventory, hostname), and installs the Akash provider itself.
 * Edit script `provider.yaml` section with your own values/provider attributes.  No other changes to the script are necessary.
 
 #### TEMPLATE
