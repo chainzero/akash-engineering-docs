@@ -19,6 +19,10 @@ In this document the process of building an Akash Provider via shell scripts is 
 
 * Download and install script on first master node
 
+> _**NOTE**_ - prior to executing this script and all remaining script executions in this guide, ensure to make the file executable such as:\
+> \
+> `chmod 755 k3sAndProviderServices.sh`
+
 ```
 ./k3sAndProviderServices.sh
 ```
@@ -55,7 +59,7 @@ vi key.pem
 
 ### Notes
 
-* Considered makiing the import of provider account and export of private key/key.pem file creation part of scripted steps but proved to be cubersome and likely better to handle these sensitive oepratotions manually and outside of script.  But could reconsider embedding into automated process later.
+* We considered making the import of provider account and export of private key/key.pem file creation part of scripted steps but proved to be cumbersome and likely better to handle these sensitive operations manually and outside of script.  But could reconsider embedding into automated process later.
 
 ## Worker Node Build
 
@@ -89,19 +93,23 @@ vi key.pem
 ### Steps
 
 * Download and install script on the master node
-* Script installs Helm, installs alll necessary Akash Provider labels/namespaces/CRDs, install all necessary Akash operators (inventory, hostname), and installs the Akash provider itself.
+* Script installs Helm, installs all necessary Akash Provider labels/namespaces/CRDs, install all necessary Akash operators (inventory, hostname), and installs the Akash provider itself.
 * Edit script `provider.yaml` section with your own values/provider attributes.  No other changes to the script are necessary.
+* If the use of the customer bid script is desired - ensure that the `provider.yaml` section is updated with appropriate/desired pricing options.  Customization is covered in detail within this [doc](https://akash.network/docs/providers/build-a-cloud-provider/akash-cloud-provider-build-with-helm-charts/#step-9---provider-bid-customization).
+* The template below includes the `-g` option which enables GPU support.  Remove this option if your provider does not host GPUs.
+* The template below includes the `-w` option which is a command separated list of the nodes in your cluster with GPU resources.  Remove this option if your provider does not host GPUs.
+* The template below includes the `-p` option which enables the use of the custom bid price script.  Remove this option if the custom bid price script use is not desired.
 
 #### TEMPLATE
 
 ```
-./providerBuild.sh -a <akash-provider-address> -k <password-for-private-key-file> -d <provider-domain> -n http://akash-node-1:26657 -g -w <comma-seperated-list-of-gpu-nodes>
+./providerBuild.sh -a <akash-provider-address> -k <password-for-private-key-file> -d <provider-domain> -n http://akash-node-1:26657 -p -g -w <comma-seperated-list-of-gpu-nodes>
 ```
 
 #### EXAMPLE
 
 ```
-./providerBuild.sh -a akash1mtnuc449l0mckz4cevs835qg72nvqwlul5wzyf -k akashpass -d akashtesting.xyz -n http://akash-node-1:26657 -g -w worker1
+./providerBuild.sh -a akash1mtnuc449l0mckz4cevs835qg72nvqwlul5wzyf -k akashpass -d akashtesting.xyz -n http://akash-node-1:26657 -p -g -w worker1
 ```
 
 ## Verifications
@@ -144,4 +152,14 @@ operator-inventory-hardware-discovery-worker1   1/1     Running   0          51m
 operator-inventory-hardware-discovery-master1   1/1     Running   0          51m
 akash-node-1-0                                  1/1     Running   0          51m
 akash-provider-0                                1/1     Running   0          16s
+```
+
+### Query Provider's Inventory
+
+> _**NOTE**_ - after the Akash Provider has entered a running state - restart the inventory operator to ensure fresh discovery such as:\
+> \
+> `kubectl delete pod <inventory-operator-pod-name> -n akash-services`
+
+```
+grpcurl -insecure <provider-domain/IP-address>:8444 akash.provider.v1.ProviderRPC.GetStatus
 ```
