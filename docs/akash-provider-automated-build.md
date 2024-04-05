@@ -59,6 +59,8 @@ vi key.pem
 
 ## Worker Node Build
 
+> _**NOTE**_ - proactively reboot the worker node following completion of these steps as it is often necessary following the install of GPU drives
+
 ### Steps
 
 * Download and install script on worker nodes
@@ -93,18 +95,27 @@ vi key.pem
 #### TEMPLATE
 
 ```
-./providerBuild.sh -a <akash-provider-address> -k <password-for-private-key-file> -d  -n http://akash-node-1:26657 -g -w '<comma-seperated-list-of-gpu-nodes>'
+./providerBuild.sh -a <akash-provider-address> -k <password-for-private-key-file> -d <provider-domain> -n http://akash-node-1:26657 -g -w <comma-seperated-list-of-gpu-nodes>
 ```
 
 #### EXAMPLE
 
 ```
-./providerBuild.sh -a akash1mtnuc449l0mckz4cevs835qg72nvqwlul5wzyf -k akashpass -d akashtesting.xyz -n http://akash-node-1:26657 -g -w 'worker'
+./providerBuild.sh -a akash1mtnuc449l0mckz4cevs835qg72nvqwlul5wzyf -k akashpass -d akashtesting.xyz -n http://akash-node-1:26657 -g -w worker1
 ```
 
 ## Verifications
 
 > _**NOTE**_ - conduct these validations from a Kubernetes master node in your cluster
+
+> _**NOTE**_ - while the scripts executed in this guide have access to the Kubernetes kubeconfig within it's session, your CLI session may not have access to kubeconfig.  Execute this command to allow access to your kubeconfig file for the verifications in this section and for other Kubernetes activities.
+>
+>
+>
+> ```shellscript
+> # Set KUBECONFIG
+> export KUBECONFIG=/etc/rancher/k3s/k3s.yaml
+> ```
 
 > _**NOTE**_ - the Akash provider will not come into service until the RPC Node in your cluster is in sync.  Confirm RPC Node status via:\
 > \
