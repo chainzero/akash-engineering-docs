@@ -18,13 +18,14 @@ In this document the process of building an Akash Provider via shell scripts is 
 ### Steps
 
 * Download and install script on first master node
+* The template below includes the `-e` option which automatically updates the K3s kubeconfig file with the external IP address of the master node.  This will provoke cert generation for the external address as well.  This allows kubectl access to the cluster externally without any further config necessary.  Remove this option if you do not desire external kubeconfig access.
 
 > _**NOTE**_ - prior to executing this script and all remaining script executions in this guide, ensure to make the file executable such as:\
 > \
 > `chmod 755 k3sAndProviderServices.sh`
 
 ```
-./k3sAndProviderServices.sh
+./k3sAndProviderServices.sh -d traefik -e <public-ip-of-node>
 ```
 
 ### Notes
