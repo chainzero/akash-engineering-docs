@@ -98,18 +98,19 @@ vi key.pem
 * If the use of the customer bid script is desired - ensure that the `provider.yaml` section is updated with appropriate/desired pricing options.  Customization is covered in detail within this [doc](https://akash.network/docs/providers/build-a-cloud-provider/akash-cloud-provider-build-with-helm-charts/#step-9---provider-bid-customization).
 * The template below includes the `-g` option which enables GPU support.  Remove this option if your provider does not host GPUs.
 * The template below includes the `-w` option which is a command separated list of the nodes in your cluster with GPU resources.  Remove this option if your provider does not host GPUs.
+* The template below includes the `-s` option which enables persistent storage on the provider.  Remove this option if your provider does not support persistent storage.  Currently two manual actions are necessary when enabling persistent storage:  1).  Update the providerBuild.sh script with the storage class in the `Label the StorageClass` section.  Currently this is defaulted to `beta3` storage class and no action is necessary if this is your storage class.  2).  The script expects a CEPH config file in the `~/provider` directory.  An example CEPH config file can be found [here](https://akash.network/docs/providers/build-a-cloud-provider/helm-based-provider-persistent-storage-enablement/#configuration-for-a-single-storage-node).  3). The Akash inventory operator labels nodes automatically and by default expects the storage class of `beta3`.  If persistent storage class is not `beta3` - update the inventory operator as detailed [here](https://akash.network/docs/providers/build-a-cloud-provider/helm-based-provider-persistent-storage-enablement/#inventory-operator).
 * The template below includes the `-p` option which enables the use of the custom bid price script.  Remove this option if the custom bid price script use is not desired.
 
 #### TEMPLATE
 
 ```
-./providerBuild.sh -a <akash-provider-address> -k <password-for-private-key-file> -d <provider-domain> -n http://akash-node-1:26657 -p -g -w <comma-seperated-list-of-gpu-nodes>
+./providerBuild.sh -a <akash-provider-address> -k <password-for-private-key-file> -d <provider-domain> -n http://akash-node-1:26657 -g -w <comma-seperated-list-of-gpu-nodes> -s -p
 ```
 
 #### EXAMPLE
 
 ```
-./providerBuild.sh -a akash1mtnuc449l0mckz4cevs835qg72nvqwlul5wzyf -k akashpass -d akashtesting.xyz -n http://akash-node-1:26657 -p -g -w worker1
+./providerBuild.sh -a akash1mtnuc449l0mckz4cevs835qg72nvqwlul5wzyf -k akashprovider -d akashtesting.xyz -n http://akash-node-1:26657 -g -w worker -s -p
 ```
 
 ## Verifications
