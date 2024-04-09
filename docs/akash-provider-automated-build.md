@@ -106,13 +106,13 @@ vi key.pem
 #### TEMPLATE
 
 ```
-./providerBuild.sh -a <akash-provider-address> -k <password-for-private-key-file> -d <provider-domain> -n http://akash-node-1:26657 -g -w <comma-seperated-list-of-gpu-nodes> -s -p
+./providerBuild.sh -a <akash-provider-address> -k <password-for-private-key-file> -d <provider-domain> -n http://akash-node-1:26657 -g -w <comma-seperated-list-of-gpu-nodes> -s -b <storage-class> -p
 ```
 
 #### EXAMPLE
 
 ```
-./providerBuild.sh -a akash1mtnuc449l0mckz4cevs835qg72nvqwlul5wzyf -k akashprovider -d akashtesting.xyz -n http://akash-node-1:26657 -g -w worker -s -p
+./providerBuild.sh -a akash1mtnuc449l0mckz4cevs835qg72nvqwlul5wzyf -k akashprovider -d akashtesting.xyz -n http://akash-node-1:26657  -g -w worker -s -b beta2 -p
 ```
 
 ## Verifications
