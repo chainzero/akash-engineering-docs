@@ -18,22 +18,35 @@ In this document the process of building an Akash Provider via shell scripts is 
 ### Steps
 
 * Download and install script on first master node
+* The templates below include the `-g` option which enables GPU support.   Remove this option if your master node does not host GPU resources.
+* The `All in One Template` below includes the `-a` option which signals this is as an all in one cluster install (I.e. single cluster node with single host acting as master and worker node).&#x20;
 * The template below includes the `-e` option which automatically updates the K3s kubeconfig file with the external IP address of the master node.  This will provoke cert generation for the external address as well.  This allows kubectl access to the cluster externally without any further config necessary.  Remove this option if you do not desire external kubeconfig access.
 
 > _**NOTE**_ - prior to executing this script and all remaining script executions in this guide, ensure to make the file executable such as:\
 > \
 > `chmod 755 k3sAndProviderServices.sh`
 
+#### Multi Node Cluster Template
+
+* Use this template if the cluster has multiple nodes
+
 ```
-./k3sAndProviderServices.sh -d traefik -e <public-ip-of-node>
+./k3sAndProviderServices.sh -d traefik -e <public-ip-of-node> -g
+```
+
+#### All in One Cluster Template
+
+* Use this template if the cluster has only a single node (I.e. one host serving as both master/worker)
+
+```
+./k3sAndProviderServices.sh -d traefik -e <public-ip-of-node> -g -a
 ```
 
 ### Notes
 
 * Should be no need to use options or edit script
 * Script installs K3s master node and akash-provider services latest version (can specify other version if needed but defaults to latest)
-* Estimated time to complete - 3-5 minutes
-* Capture the outputted k3s token for later use in worker node additions
+* Capture the outputted k3s token for later use in worker node additions (not applicable to `All in One Cluster` scenarios).
 
 ## Create/Import Provider Account and Export
 
@@ -63,6 +76,8 @@ vi key.pem
 * We considered making the import of provider account and export of private key/key.pem file creation part of scripted steps but proved to be cumbersome and likely better to handle these sensitive operations manually and outside of script.  But could reconsider embedding into automated process later.
 
 ## Worker Node Build
+
+> _**NOTE**_ - if your provider is an `All in One` cluster and was specified as such during the K3s/Provider-Services install script - skip this `Worker Node Build` step and proceed to the [Build Provider](akash-provider-automated-build.md#build-provider) section&#x20;
 
 > _**NOTE**_ - proactively reboot the worker node following completion of these steps as it is often necessary following the install of GPU drives
 
