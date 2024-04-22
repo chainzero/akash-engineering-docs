@@ -181,3 +181,31 @@ akash-provider-0                                1/1     Running   0          16s
 ```
 grpcurl -insecure <provider-domain/IP-address>:8444 akash.provider.v1.ProviderRPC.GetStatus
 ```
+
+## K3s Upgrades
+
+### Overview
+
+A script is made available - `upgrade_k3s.sh` - to allow ease in upgrading the K3s cluster.
+
+The script performs the following actions:
+
+* Determines the currently installed K3s version on the host
+* Determines the latest stable version from the K3s GitHub repository
+* If there is a difference in the current version on the host and the latest stable version available the script is initiate/complete the upgrade to the latter.
+* An option is made available - covered in the Usage section of this guide - to put the script into "discovery only" mode.  When used the analysis of current to latest stable version will be conducted but the host upgrade process will not iproceed.  This is provided to allow analysis if an upgrade is available with intent to upgrade later.
+* This upgrade script must be executed on all host in the cluster.  Begin by upgrade the control plane nodes and then proceed to the worker nodes.
+
+### Usage
+
+#### Discovery Only Mode
+
+```
+upgrade_k3s.sh -d
+```
+
+#### Host Upgrade Mode
+
+```
+upgrade_k3s.sh
+```
