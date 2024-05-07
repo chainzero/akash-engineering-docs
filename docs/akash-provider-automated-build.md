@@ -55,6 +55,12 @@ In this document the process of building an Akash Provider via shell scripts is 
 ./k3sAndProviderServices.sh -d traefik -e <public-ip-of-node> -g -a
 ```
 
+#### Remove a Control Plane Node
+
+```
+./k3sAndProviderServices.sh -r <node-name>
+```
+
 ### Notes
 
 * Should be no need to use options or edit script
