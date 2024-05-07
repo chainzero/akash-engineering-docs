@@ -96,7 +96,7 @@ vi key.pem
 
 ## Worker Node Build
 
-> _**NOTE**_ - if your provider is an `All in One` cluster and was specified as such during the K3s/Provider-Services install script - skip this `Worker Node Build` step and proceed to the [Build Provider](akash-provider-automated-build.md#build-provider) section&#x20;
+> _**NOTE**_ - if your provider is an `All in One` cluster and was specified as such during the K3s/Provider-Services install script - skip this `Worker Node Build` step and proceed to the Build Provider section&#x20;
 
 > _**NOTE**_ - proactively reboot the worker node following completion of these steps as it is often necessary following the install of GPU drives
 
