@@ -4,9 +4,11 @@
 
 In this document the process of building an Akash Provider via shell scripts is reviewed.  These techniques will allow an Akash Provider build with the following components:
 
-* Kubernetes build using K3s.  Multinode cluster build is possible using reviewed strategy.
+* Kubernetes build using K3s.  Multinode cluster build is possible using reviewed strategy.  Both clusters with multiple control plane nodes and multiple worker nodes are possible and are detailed in the instructions that follow.
+* The K3s cluster in these builds use calcio as their container network interface (CNI)
+* When mutli control plane node clusters are built such clusters use a redundant etc cluster.
 * Install of ALL Akash Provider components including Akash Provider, Akash Operators (hostname, inventory), NGINX ingress controller, and necessary Kubernetes constructs (namespaces, labels, etc)
-* Intall of worker nodes including optional GPU configurations.  By simply provider an option in the shell script invoke the user is able to dictate if the node has GPUs and if so installs the necessary NVIDIA drivers and tool kits.
+* Install of worker nodes including optional GPU configurations.  By simply provider an option in the shell script invoke the user is able to dictate if the node has GPUs and if so installs the necessary NVIDIA drivers and tool kits.
 
 ## Script Access
 
@@ -26,12 +28,23 @@ In this document the process of building an Akash Provider via shell scripts is 
 > \
 > `chmod 755 k3sAndProviderServices.sh`
 
-#### Multi Node Cluster Template
+#### Multi Node Cluster Templates
+
+**INITIIAL CONTROL PLANE NODE**
 
 * Use this template if the cluster has multiple nodes
 
 ```
 ./k3sAndProviderServices.sh -d traefik -e <public-ip-of-node> -g
+```
+
+#### ADDITIONAL CONTROL PLAN NODE ADDS
+
+* Use this template to join additional control plane nodes to the cluster
+* Logic in script will join the node as an additional control plane instance and join the node to the pre-existing etcd cluster
+
+```
+./k3sAndProviderServices.sh -d traefik -m <internal-ip-existing-master-node> -c <cluster-join-token> -g
 ```
 
 #### All in One Cluster Template
