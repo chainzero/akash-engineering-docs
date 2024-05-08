@@ -61,6 +61,12 @@ In this document the process of building an Akash Provider via shell scripts is 
 ./k3sAndProviderServices.sh -r <node-name>
 ```
 
+#### Remove a Worker Node
+
+```
+./k3sAndProviderServices.sh -w <node-name>
+```
+
 ### Notes
 
 * Should be no need to use options or edit script
