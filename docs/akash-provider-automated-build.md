@@ -144,8 +144,8 @@ vi key.pem
 * The template below includes the `-b` option which allows the user to state the storage class of the provider (I.e. beta1, beta2, or beta3).  Using this option allows automatic labeling of the storage class and an update to the inventory operator with the storage class type if necessary.  Remove this option if your provider does not support persistent storage.
 * The template below includes the `-p` option which enables the use of the custom bid price script.  Remove this option if the custom bid price script use is not desired.
 * The script includes the `c` option to specify the chain ID.  The default chain ID is `mainnet2`.  This option is NOT included in the template.
-* The script includes the `v` option to specify the `provider-services` binary version.  The default version is `0.6.1`.  This option is NOT included in the template.
-* The script includes the `x` option to specify the `akash` binary version for use within the provider's custom RPC node. The default version is `0.34.1`. This option is NOT included in the template.
+* The script includes the `v` option to specify the `provider-services` binary version.  The current/latest version is extracted from the related Helm Chart `appVersion` field..  This option is NOT included in the template.
+* The script includes the `x` option to specify the `akash` binary version for use within the provider's custom RPC node. The current/latest version is extracted from the related Helm Chart `appVersion` field.  This option is NOT included in the template.
 
 #### TEMPLATE
 
