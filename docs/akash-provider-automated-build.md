@@ -23,6 +23,7 @@ In this document the process of building an Akash Provider via shell scripts is 
 * The templates below include the `-g` option which enables GPU support.   Remove this option if your master node does not host GPU resources.
 * The `All in One Template` below includes the `-a` option which signals this is as an all in one cluster install (I.e. single cluster node with single host acting as master and worker node).&#x20;
 * The template below includes the `-e` option which automatically updates the K3s kubeconfig file with the external IP address of the master node.  This will provoke cert generation for the external address as well.  This allows kubectl access to the cluster externally without any further config necessary.  Remove this option if you do not desire external kubeconfig access.
+* Template automatically configures Coredns to use upstream DNS servers of `8.8.8.8` and `8.8.4.4` via Coredns configmap.  No user option is necessary for this purpose.  Edit script manually if you choose to use other DNS servers for external domain name resolutions.
 
 > _**NOTE**_ - prior to executing this script and all remaining script executions in this guide, ensure to make the file executable such as:\
 > \
@@ -142,6 +143,9 @@ vi key.pem
 * The template below includes the `-s` option which enables persistent storage on the provider.    The script expects a CEPH config file in the `~/provider` directory.  An example CEPH config file can be found [here](https://akash.network/docs/providers/build-a-cloud-provider/helm-based-provider-persistent-storage-enablement/#configuration-for-a-single-storage-node).  Remove this option if your provider does not support persistent storage.
 * The template below includes the `-b` option which allows the user to state the storage class of the provider (I.e. beta1, beta2, or beta3).  Using this option allows automatic labeling of the storage class and an update to the inventory operator with the storage class type if necessary.  Remove this option if your provider does not support persistent storage.
 * The template below includes the `-p` option which enables the use of the custom bid price script.  Remove this option if the custom bid price script use is not desired.
+* The script includes the `c` option to specify the chain ID.  The default chain ID is `mainnet2`.  This option is NOT included in the template.
+* The script includes the `v` option to specify the `provider-services` binary version.  The default version is `0.6.1`.  This option is NOT included in the template.
+* The script includes the `x` option to specify the `akash` binary version for use within the provider's custom RPC node. The default version is `0.34.1`. This option is NOT included in the template.
 
 #### TEMPLATE
 
