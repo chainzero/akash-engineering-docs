@@ -138,6 +138,12 @@ vi key.pem
 * Script installs Helm, installs all necessary Akash Provider labels/namespaces/CRDs, install all necessary Akash operators (inventory, hostname), and installs the Akash provider itself.
 * Edit script `provider.yaml` section with your own values/provider attributes.  No other changes to the script are necessary.
 * If the use of the customer bid script is desired - ensure that the `provider.yaml` section is updated with appropriate/desired pricing options.  Customization is covered in detail within this [doc](https://akash.network/docs/providers/build-a-cloud-provider/akash-cloud-provider-build-with-helm-charts/#step-9---provider-bid-customization).
+* Provider RPC Node use/declaration - the `-n` option exists to specify the RPC node that the Akash Provider should use.  Defaults for the RPC node have been set as follows:
+
+> \-- If the chain-id is defined as `akashnet-2` - which is the default chain unless otherwise specified - the RPC node will be set to [http://akash-node-1:26657](http://akash-node-1:26657).  In the build of a Mainnet provider a custom/local RPC node will be deployed in your Kubernetes cluster and thus we use that node at the specified Kubernetes service name.\
+> \
+> \-- If the chain-id is specified as `sandbox-01` - which dictates that this is an Akash sandbox provider build - the RPC niode will be set to [https://rpc.sandbox-01.aksh.pw:443](https://rpc.sandbox-01.aksh.pw).  In the sandbox provider build - by default - we do not install a local/dedicated RPC node and instead use this publicly available endpoint.
+
 * The template below includes the `-g` option which enables GPU support.  Remove this option if your provider does not host GPUs.
 * The template below includes the `-w` option which is a command separated list of the nodes in your cluster with GPU resources.  Remove this option if your provider does not host GPUs.
 * The template below includes the `-s` option which enables persistent storage on the provider.    The script expects a CEPH config file in the `~/provider` directory.  An example CEPH config file can be found [here](https://akash.network/docs/providers/build-a-cloud-provider/helm-based-provider-persistent-storage-enablement/#configuration-for-a-single-storage-node).  Remove this option if your provider does not support persistent storage.
@@ -150,13 +156,13 @@ vi key.pem
 #### TEMPLATE
 
 ```
-./providerBuild.sh -a <akash-provider-address> -k <password-for-private-key-file> -d <provider-domain> -n http://akash-node-1:26657 -g -w <comma-seperated-list-of-gpu-nodes> -s -b <storage-class> -p
+./providerBuild.sh -a <akash-provider-address> -k <password-for-private-key-file> -d <provider-domain> -g -w <comma-seperated-list-of-gpu-nodes> -s -b <storage-class> -p
 ```
 
 #### EXAMPLE
 
 ```
-./providerBuild.sh -a akash1mtnuc449l0mckz4cevs835qg72nvqwlul5wzyf -k akashprovider -d akashtesting.xyz -n http://akash-node-1:26657  -g -w worker -s -b beta2 -p
+./providerBuild.sh -a akash1mtnuc449l0mckz4cevs835qg72nvqwlul5wzyf -k akashprovider -d akashtesting.xyz -g -w worker -s -b beta2 -p
 ```
 
 ## Verifications
