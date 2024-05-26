@@ -725,9 +725,45 @@ attributes:
 
 _**Notes on Proposal Customization**_
 
-Create a network upgrade proposal on the blockchain using the `Example Full Proposal` below. This JSON proposal example should be updated for your purposes in the following sections:
+Create a network upgrade proposal on the blockchain using the `Example Proposal` below. This JSON proposal example should be updated for your purposes in the following sections:
 
-_**Example Full Proposal**_
+_**Example  Proposal**_
+
+> _**NOTES**_:\
+> \
+> \- Default voting period is 10 minutes
 
 ```
+akash tx gov submit-proposal software-upgrade v0.34.0 --title "v0.34.0" --description "SW upgrade proposal for v0.34.0" --upgrade-height 1857050 --upgrade-info "https://github.com/akash-network/net/blob/main/sandbox/upgrades/v0.34.0/info.json" --deposit 4000000uakt
 ```
+
+_**Example Query Proposal**_
+
+```
+akash query gov proposal 4 | jq -r .
+```
+
+_**Example Deposit**_
+
+```
+akash tx gov deposit 4 10000000uakt
+```
+
+_**Example Query Proposal to Validate Deposit**_
+
+```
+akash query gov proposal 4 | jq -r .
+```
+
+_**Example Vote**_
+
+* Repeat across sufficient number of accounts to reach consesus
+
+```
+akash tx gov vote 4 yes
+```
+
+_**Example Query Tally/Votes**_
+
+<pre><code><strong>akash query gov tally 4 | jq -r .
+</strong></code></pre>
