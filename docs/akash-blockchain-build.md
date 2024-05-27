@@ -721,7 +721,7 @@ attributes:
 
 ### CosmoVisor Network Upgrade Test
 
-**Create Proposal**
+#### Create Proposal, Deposit, and Vote
 
 _**Notes on Proposal Customization**_
 
@@ -767,3 +767,32 @@ _**Example Query Tally/Votes**_
 
 <pre><code><strong>akash query gov tally 4 | jq -r .
 </strong></code></pre>
+
+#### Upgrade Validations
+
+_**Validator Logs Showing Upgrade Initiation**_
+
+```
+INF service stop impl={"Dir":"/root/.akash/data/cs.wal","Head":{"ID":"6ZRpIvNrxK4C:/root/.akash/data/cs.wal/wal","Path":"/root/.akash/data/cs.wal/wal"},"ID":"group:6ZRpIvNrxK4C:/root/.akash/data/cs.wal/wal","Logger":{}} module=consensus msg={} wal=/root/.akash/data/cs.wal/wal
+4:11PM INF daemon shutting down in an attempt to restart module=cosmovisor
+4:12PM INF no upgrade binary found, beginning to download it module=cosmovisor
+4:12PM INF downloading binary complete module=cosmovisor
+4:12PM INF pre-upgrade command does not exist. continuing the upgrade. module=cosmovisor
+4:12PM INF upgrade detected, relaunching app=akash module=cosmovisor
+4:12PM INF running app args=["start"] module=cosmovisor path=/root/.akash/cosmovisor/upgrades/v0.34.0/bin/akash
+
+root-validator1-1  | INF applying upgrade "v0.34.0" at height: 628
+```
+
+_**Additional Validations**_
+
+> _**NOTE**_ - in testing `akash status` did not show new version despite successful Cosmovisor upgrade.  This section provides additional verification examples - with example output -  to ensure the upgrade was completed.
+
+```
+ps -ef | grep akash
+root          89       1 12 16:12 ?        00:02:02 /root/.akash/cosmovisor/upgrades/v0.34.0/bin/akash start
+root         229     169  0 16:28 pts/1    00:00:00 grep akash
+
+/root/.akash/cosmovisor/upgrades/v0.34.0/bin/akash version
+v0.34.1
+```
