@@ -55,65 +55,12 @@ mkdir -p /mnt/validator
 * Create the Kubernetes Persistent Volumes using the following manifest
 
 ```
-apiVersion: v1
-kind: PersistentVolume
-metadata:
-  name: validator-pv-1
-spec:
-  capacity:
-    storage: 50Gi
-  accessModes:
-    - ReadWriteOnce
-  persistentVolumeReclaimPolicy: Retain
-  storageClassName: validator-storage
-  local:
-    path: /mnt/validator
-  nodeAffinity:
-    required:
-      nodeSelectorTerms:
-      - matchExpressions:
-        - key: kubernetes.io/hostname
-          operator: In
-          values:
-          - node1
-
----
-
-apiVersion: v1
-kind: PersistentVolume
-metadata:
-  name: validator-pv-2
-spec:
-  capacity:
-    storage: 50Gi
-  accessModes:
-    - ReadWriteOnce
-  persistentVolumeReclaimPolicy: Retain
-  storageClassName: validator-storage
-  local:
-    path: /mnt/validator
-  nodeAffinity:
-    required:
-      nodeSelectorTerms:
-      - matchExpressions:
-        - key: kubernetes.io/hostname
-          operator: In
-          values:
-          - node2
-```
-
-#### Deploy the Initial Validator Stateful Set
-
-> _**NOTE**_ - a generic Omnibus image is used in this step to create the Validator stateful set and related containers. The Akash Vaildator software is NOT installed via this generic image. We will install and configure Akash node binaries in subsequent steps.
-
-* Create the initial Akash Validator's stateful set and related K8s services with this manifest
-
-```
 # StatefulSet for validator-01 service
 apiVersion: apps/v1
 kind: StatefulSet
 metadata:
   name: validator-01
+  namespace: akash-services
 spec:
   serviceName: "validator-01-service"
   replicas: 1
@@ -176,6 +123,7 @@ apiVersion: v1
 kind: Service
 metadata:
   name: validator-01
+  namespace: akash-services
 spec:
   selector:
     app: validator-01
@@ -194,6 +142,7 @@ apiVersion: storage.k8s.io/v1
 kind: StorageClass
 metadata:
   name: validator-storage
+  namespace: akash-services
 provisioner: kubernetes.io/no-provisioner
 volumeBindingMode: WaitForFirstConsumer
 ```
@@ -203,31 +152,31 @@ volumeBindingMode: WaitForFirstConsumer
 _**ENSURE PVC BINDING**_
 
 ```
-kubectl get pvc
+kubectl get pvc -n akash-services
 ```
 
 _**EXPECTED/EXAMPLE OUTPUT**_
 
 ```
-root@node1:~/kube-manifests/validator# kubectl get pvc
+root@blockchain:~# kubectl get pvc -n akash-services
 
-NAME                  STATUS   VOLUME           CAPACITY   ACCESS MODES   STORAGECLASS        AGE
-data-validator-01-0   Bound    validator-pv-1   50Gi       RWO            validator-storage   92s
+NAME                  STATUS   VOLUME           CAPACITY   ACCESS MODES   STORAGECLASS        VOLUMEATTRIBUTESCLASS   AGE
+data-validator-01-0   Bound    validator-pv-1   50Gi       RWO            validator-storage   <unset>                 62s
 ```
 
 **Verify Validator Pod**
 
 ```
-kubectl get pods
+kubectl get pods -n akash-services
 ```
 
 _**EXPECTED/EXAMPLE OUTPUT**_
 
 ```
-root@node1:~/kube-manifests/validator# kubectl get pods
+root@blockchain:~# kubectl get pods -n akash-services
 
 NAME             READY   STATUS    RESTARTS   AGE
-validator-01-0   1/1     Running   0          3m24s
+validator-01-0   1/1     Running   0          6m3s
 ```
 
 #### STEP 3 - Configure the Initial Validator
@@ -239,7 +188,7 @@ validator-01-0   1/1     Running   0          3m24s
 > _**NOTE**_ - following this section all remaining commands in this seciton shold be conducted from within the validator pod CLI session established
 
 ```
-kubectl exec -ti validator-01-0 -- bash
+kubectl exec -ti validator-01-0 -n akash-services -- bash
 ```
 
 **Install the Akash Node Binary within the Pod**
@@ -403,7 +352,7 @@ mv ~/.akash/config/genesis.json.new ~/.akash/config/genesis.json
 * Now with the node configured we can remove sleep infinity and allow the pod to initialize the first validator on the network
 
 ```
-kubectl patch statefulset validator-01 --type='json' -p='[{"op": "remove", "path": "/spec/template/spec/containers/0/command"}, {"op": "remove", "path": "/spec/template/spec/containers/0/args"}]'
+kubectl patch statefulset validator-01 -n akash-services --type='json' -p='[{"op": "remove", "path": "/spec/template/spec/containers/0/command"}, {"op": "remove", "path": "/spec/template/spec/containers/0/args"}]'
 ```
 
 **Verify the Validator is Writing Blocks**
@@ -411,7 +360,7 @@ kubectl patch statefulset validator-01 --type='json' -p='[{"op": "remove", "path
 * Verify that the validator is writing blocks to the blochchain by continually monitoring the validator pod
 
 ```
-kubectl logs statefulset/validator-01 -f
+kubectl logs validator-01-0 -n akash-services -f
 ```
 
 _**EXAMPLE/EXPECTED OUTPUT**_
@@ -504,6 +453,7 @@ apiVersion: apps/v1
 kind: StatefulSet
 metadata:
   name: rpc
+  namespace: akash-services
 spec:
   serviceName: "rpc-service"
   replicas: 1
@@ -579,6 +529,7 @@ spec:
   volumeClaimTemplates:
   - metadata:
       name: data
+      namespace: akash-services
     spec:
       accessModes: [ "ReadWriteOnce" ]
       resources:
@@ -590,6 +541,7 @@ apiVersion: v1
 kind: Service
 metadata:
   name: rpc
+  namespace: akash-services
 spec:
   selector:
     app: rpc
@@ -615,8 +567,10 @@ apiVersion: storage.k8s.io/v1
 kind: StorageClass
 metadata:
   name: akash-nodes
+  namespace: akash-services
 provisioner: kubernetes.io/no-provisioner
 volumeBindingMode: WaitForFirstConsumer
+
 ```
 
 #### STEP 3 - Confirm RPC Node Status
@@ -628,7 +582,7 @@ volumeBindingMode: WaitForFirstConsumer
 > _**NOTE**_ - following this section all remaining commands in this seciton shold be conducted from within the RPC Node pod CLI session established
 
 ```
-kubectl exec -ti rpc-0 -- bash
+kubectl exec -ti rpc-0 -n akash-services -- bash
 ```
 
 **Query Node Status**
