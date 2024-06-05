@@ -683,12 +683,22 @@ Create a network upgrade proposal on the blockchain using the `Example Proposal`
 
 _**Example  Proposal**_
 
-> _**NOTES**_:\
-> \
-> \- Default voting period is 10 minutes
+> _**NOTES**_:
+>
+>
+>
+> * Ensure to use the raw content URL such as:
+>
+>
+>
+> '[https://raw.githubusercontent.com/akash-network/net/main/sandbox/upgrades/v0.36.0/info.json](https://raw.githubusercontent.com/akash-network/net/main/sandbox/upgrades/v0.36.0/info.json)\`
+>
+>
+>
+> * Default voting period is 10 minutes
 
 ```
-akash tx gov submit-proposal software-upgrade v0.34.0 --title "v0.34.0" --description "SW upgrade proposal for v0.34.0" --upgrade-height 1857050 --upgrade-info "https://github.com/akash-network/net/blob/main/sandbox/upgrades/v0.34.0/info.json" --deposit 4000000uakt
+akash tx gov submit-proposal software-upgrade v0.34.0 --title "v0.34.0" --description "SW upgrade proposal for v0.34.0" --upgrade-height 1857050 --upgrade-info "https://raw.githubusercontent.com/akash-network/net/main/sandbox/upgrades/v0.34.0/info.json" --deposit 4000000uakt
 ```
 
 _**Example Query Proposal**_
