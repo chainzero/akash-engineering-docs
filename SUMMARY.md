@@ -1,7 +1,9 @@
 # Table of contents
 
 * [Akash Engineering Docs](README.md)
-* [docs](docs/README.md)
+* [Akash Docs](akash-docs/README.md)
+  * [Fee Grants](akash-docs/fee-grants.md)
+* [Akash Eng Docs](docs/README.md)
   * [Akash Development Environment](docs/akash-dev-env.md)
   * [intro](docs/intro.md)
   * [akashContributors](docs/akashcontributors/README.md)
