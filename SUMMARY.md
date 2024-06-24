@@ -3,6 +3,7 @@
 * [Akash Engineering Docs](README.md)
 * [Akash Docs](akash-docs/README.md)
   * [Fee Grants](akash-docs/fee-grants.md)
+  * [Provider Endpoints](akash-docs/provider-endpoints.md)
 * [Akash Eng Docs](docs/README.md)
   * [Akash Development Environment](docs/akash-dev-env.md)
   * [intro](docs/intro.md)
