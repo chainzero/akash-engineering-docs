@@ -114,6 +114,10 @@ spec:
 
 * If creating mutliple validators in the genesis - create an initial validator and fully configure in subsequent steps to init the blockchain and then come back to this seciton to bootstrap additional validators have the chain is initialized
 
+=======
+**Create the Persistent Volumes**
+
+* Create the Kubernetes Persistent Volumes using the following manifest
 
 ```
 # StatefulSet for validator-01 service
@@ -244,6 +248,8 @@ validator-01-0   1/1     Running   0          6m3s
 
 > _**NOTE**_ - if multiple validators will be included in the genesis - also review section `Multiple Validators Config`
 
+=======
+
 > _**NOTE**_ - ensure the validator pod created in the prior step is in a `Running` status prior to completing the steps in this section
 
 **Create a Session into the Validator Pod**
@@ -352,6 +358,7 @@ akash gentx validator3 1000000000000uakt --chain-id sandbox-01 --moniker validat
 
 akash collect-gentxs
 
+=======
 **Capture the Node ID of the Validator**
 
 * Store the captured output/node ID exposed in this step for use in subsequent steps
@@ -374,6 +381,7 @@ af88523de02b3943d0e29c8b4d97408b3f0c1098
 
 > NOTE- ensure to capture the mnemonic outputted by the `akash keys add` command for future use/account recovery as needed
 > NOTE- if multiple validators are being added to the genesis - consider creating validator accounts on different machines and then importing them into this validator machine.  Account creation on different machines ensures the keys are added with different entropy sources and ensure unique public keys.
+=======
 
 * Create an account with the key name of `default`
 
@@ -505,6 +513,7 @@ mkdir -p /mnt/rpc
 
 * Create the Kubernetes Persistent Volumes using the following manifest
 * Adjust the node names in the `nodeAffinity` stanza to reflect the actual hostnames in your cluster
+=======
 
 ```
 apiVersion: v1
@@ -872,4 +881,6 @@ root         229     169  0 16:28 pts/1    00:00:00 grep akash
 
 /root/.akash/cosmovisor/upgrades/v0.34.0/bin/akash version
 v0.34.1
+```
+=======
 ```
