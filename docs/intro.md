@@ -24,6 +24,9 @@ Akash Engineering documentation is broken out into the following primary categor
 * [Akash Node Code Overview](./node/node-repo-overview)
 * [Akash Node Repo - Directory Glossary](./node/akash-node-glossary.md)
 
+# Akash Blockchain Build
+
+* [Create an Akash Blockchain](akash-blockchain-build.md)
 
 ### Akash Node Repo Table of Contents
 
