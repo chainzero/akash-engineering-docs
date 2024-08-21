@@ -50,6 +50,71 @@ The build in this guide uses a two cluster topolgy with a single control-plane a
 mkdir -p /mnt/validator
 ```
 
+* If multiple validators will be created in the genesis create multiple associated mount points such as the following.  This is only necessary if all three validators will run on the same K8s cluster:
+
+```
+mkdir -p /mnt/validator1
+mkdir -p /mnt/validator2
+mkdir -p /mnt/validator3
+```
+
+**Create the Persistent Volumes**
+
+* Create the Kubernetes Persistent Volumes using the following manifest
+* Adjust the node names in the `nodeAffinity` stanza to reflect the actual hostnames in your cluster
+* Add additional sections if mutliple validators are in the genesis
+
+```
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: local-pv-validator-node1
+spec:
+  capacity:
+    storage: 50Gi
+  accessModes:
+    - ReadWriteOnce
+  persistentVolumeReclaimPolicy: Retain
+  storageClassName: validator-storage
+  local:
+    path: /mnt/validator
+  nodeAffinity:
+    required:
+      nodeSelectorTerms:
+      - matchExpressions:
+        - key: kubernetes.io/hostname
+          operator: In
+          values:
+          - master
+---
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: local-pv-validator-node2
+spec:
+  capacity:
+    storage: 50Gi
+  accessModes:
+    - ReadWriteOnce
+  persistentVolumeReclaimPolicy: Retain
+  storageClassName: validator-storage
+  local:
+    path: /mnt/validator
+  nodeAffinity:
+    required:
+      nodeSelectorTerms:
+      - matchExpressions:
+        - key: kubernetes.io/hostname
+          operator: In
+          values:
+          - worker
+```
+
+**Create the Validtor Stateful Set**
+
+* If creating mutliple validators in the genesis - create an initial validator and fully configure in subsequent steps to init the blockchain and then come back to this seciton to bootstrap additional validators have the chain is initialized
+
+=======
 **Create the Persistent Volumes**
 
 * Create the Kubernetes Persistent Volumes using the following manifest
@@ -181,6 +246,10 @@ validator-01-0   1/1     Running   0          6m3s
 
 #### STEP 3 - Configure the Initial Validator
 
+> _**NOTE**_ - if multiple validators will be included in the genesis - also review section `Multiple Validators Config`
+
+=======
+
 > _**NOTE**_ - ensure the validator pod created in the prior step is in a `Running` status prior to completing the steps in this section
 
 **Create a Session into the Validator Pod**
@@ -241,6 +310,55 @@ _**EXAMPLE/EXPECTED OUTPUT**_
 {"app_message":{"agov":{"deposit_params":{"min_initial_deposit_rate":"0.400000000000000000"}},"astaking":{"params":{"min_commission_rate":"0.050000000000000000"}},"audit":{"attributes":[]},"auth":{"accounts":[],"params":{"max_memo_characters":"256","sig_verify_cost_ed25519":"590","sig_verify_cost_secp256k1":"1000","tx_sig_limit":"7","tx_size_cost_per_byte":"10"}},"authz":{"authorization":[]},"bank":{"balances":[],"denom_metadata":[],"params":{"default_send_enabled":true,"send_enabled":[]},"supply":[]},"capability":{"index":"1","owners":[]},"cert":{"certificates":[]},"crisis":{"constant_fee":{"amount":"1000","denom":"stake"}},"deployment":{"deployments":[],"params":{"min_deposits":[{"amount":"500000","denom":"uakt"}]}},"distribution":{"delegator_starting_infos":[],"delegator_withdraw_infos":[],"fee_pool":{"community_pool":[]},"outstanding_rewards":[],"params":{"base_proposer_reward":"0.010000000000000000","bonus_proposer_reward":"0.040000000000000000","community_tax":"0.020000000000000000","withdraw_addr_enabled":true},"previous_proposer":"","validator_accumulated_commissions":[],"validator_current_rewards":[],"validator_historical_rewards":[],"validator_slash_events":[]},"escrow":{"accounts":[],"payments":[]},"evidence":{"evidence":[]},"feegrant":{"allowances":[]},"genutil":{"gen_txs":[]},"gov":{"deposit_params":{"max_deposit_period":"172800s","min_deposit":[{"amount":"10000000","denom":"stake"}]},"deposits":[],"proposals":[],"starting_proposal_id":"1","tally_params":{"quorum":"0.334000000000000000","threshold":"0.500000000000000000","veto_threshold":"0.334000000000000000"},"votes":[],"voting_params":{"voting_period":"172800s"}},"ibc":{"channel_genesis":{"ack_sequences":[],"acknowledgements":[],"channels":[],"commitments":[],"next_channel_sequence":"0","receipts":[],"recv_sequences":[],"send_sequences":[]},"client_genesis":{"clients":[],"clients_consensus":[],"clients_metadata":[],"create_localhost":false,"next_client_sequence":"0","params":{"allowed_clients":["06-solomachine","07-tendermint"]}},"connection_genesis":{"client_connection_paths":[],"connections":[],"next_connection_sequence":"0","params":{"max_expected_time_per_block":"30000000000"}}},"inflation":{"params":{"inflation_decay_factor":"2.000000000000000000","initial_inflation":"100.000000000000000000","variance":"0.050000000000000000"}},"market":{"bids":[],"leases":[],"orders":[],"params":{"bid_min_deposit":{"amount":"500000","denom":"uakt"},"order_max_bids":20}},"mint":{"minter":{"annual_provisions":"0.000000000000000000","inflation":"0.130000000000000000"},"params":{"blocks_per_year":"6311520","goal_bonded":"0.670000000000000000","inflation_max":"0.200000000000000000","inflation_min":"0.070000000000000000","inflation_rate_change":"0.130000000000000000","mint_denom":"stake"}},"params":null,"provider":{"providers":[]},"slashing":{"missed_blocks":[],"params":{"downtime_jail_duration":"600s","min_signed_per_window":"0.500000000000000000","signed_blocks_window":"100","slash_fraction_double_sign":"0.050000000000000000","slash_fraction_downtime":"0.010000000000000000"},"signing_infos":[]},"staking":{"delegations":[],"exported":false,"last_total_power":"0","last_validator_powers":[],"params":{"bond_denom":"stake","historical_entries":10000,"max_entries":7,"max_validators":100,"unbonding_time":"1814400s"},"redelegations":[],"unbonding_delegations":[],"validators":[]},"take":{"params":{"default_take_rate":20,"denom_take_rates":[{"denom":"uakt","rate":2}]}},"transfer":{"denom_traces":[],"params":{"receive_enabled":true,"send_enabled":true},"port_id":"transfer"},"upgrade":{},"vesting":{}},"chain_id":"sandbox-01","gentxs_dir":"","moniker":"validator-01","node_id":"af88523de02b3943d0e29c8b4d97408b3f0c1098"}
 ```
 
+**Multiple Validators Config**
+
+If three validators - for example - will be included in the genesis, these steps should be followed on the machines/VMs which the validators will be installed on.  It is necessary to issue the gentx commands on inidividual VMs/machines the validators will run on to ensure correct public keys are generated on those machines and that those keys are included in the gentx for that validator.
+
+##### Run on Each VM
+
+akash init --chain-id sandbox-01 validator1
+
+####
+
+root@validator-01-0:~# akash tendermint show-node-id
+a2871e0260bdb352ef77b53b25df4c2c63d87238
+
+####
+
+export AKASH_KEYRING_BACKEND=test
+
+### Recover accounts or create anew on separate VMs
+akash keys add validator1 --recover
+akash keys add validator2 --recover
+akash keys add validator3 --recover
+
+
+####
+
+akash add-genesis-account validator1 210000000000000uakt
+akash add-genesis-account validator2 45000000000000uakt
+akash add-genesis-account validator3 45000000000000uakt
+
+
+#####
+
+
+mkdir -p ~/.akash/config/gentx/validator1
+mkdir -p ~/.akash/config/gentx/validator2
+mkdir -p ~/.akash/config/gentx/validator3
+
+akash gentx validator1 200000000000000uakt --chain-id sandbox-01 --moniker validator1
+
+### gen on different VMs for unique pub keys
+akash gentx validator2 1000000000000uakt --chain-id sandbox-01 --moniker validator2 --output-document ~/.akash/config/gentx/validator2/gentx-validator2.json
+akash gentx validator3 1000000000000uakt --chain-id sandbox-01 --moniker validator3 --output-document ~/.akash/config/gentx/validator3/gentx-validator3.json
+
+### Copy individual gentx files from different VMs in validator1 ~/.akash/config/gentx directory
+### And then from validator1 run collect-gentxs
+
+akash collect-gentxs
+
+=======
 **Capture the Node ID of the Validator**
 
 * Store the captured output/node ID exposed in this step for use in subsequent steps
@@ -262,6 +380,8 @@ af88523de02b3943d0e29c8b4d97408b3f0c1098
 **Create Validator Account**
 
 > NOTE- ensure to capture the mnemonic outputted by the `akash keys add` command for future use/account recovery as needed
+> NOTE- if multiple validators are being added to the genesis - consider creating validator accounts on different machines and then importing them into this validator machine.  Account creation on different machines ensures the keys are added with different entropy sources and ensure unique public keys.
+=======
 
 * Create an account with the key name of `default`
 
@@ -392,6 +512,8 @@ mkdir -p /mnt/rpc
 **Create the Persistent Volumes**
 
 * Create the Kubernetes Persistent Volumes using the following manifest
+* Adjust the node names in the `nodeAffinity` stanza to reflect the actual hostnames in your cluster
+=======
 
 ```
 apiVersion: v1
@@ -759,4 +881,6 @@ root         229     169  0 16:28 pts/1    00:00:00 grep akash
 
 /root/.akash/cosmovisor/upgrades/v0.34.0/bin/akash version
 v0.34.1
+```
+=======
 ```
